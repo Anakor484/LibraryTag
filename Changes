@@ -4,5 +4,6 @@ Version                                   Changes
 0.03      Pre-View                        Changed the names in the Properties file. Delete LibraryTag.prp if available.
                                           Added 3 new properties. MB.Limit sets the limit of lookup requests, default is 100.
                                           LibraryTag.Update [ true/false ] is the major switch for updating library.
-                                          LibraryTag.Basedir is the position of the library. For Windows for example it should
-                                          be "c\:\\", which is an escaped string for c:\. For Linux/Unixes the dafault is "/".
+                                          LibraryTag.Basedir is the position of the library. For Windows for example it can
+                                          be "c:\". For Linux/Unixes the dafault is "/".
+                                          Added searching for files.
