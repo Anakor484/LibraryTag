@@ -8,6 +8,7 @@ import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 public class LibraryTag {
 	static ResourceBundle bundle;

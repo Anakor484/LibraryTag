@@ -18,11 +18,20 @@ import java.awt.event.KeyEvent;
 import java.io.File;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.MissingResourceException;
 import java.util.NoSuchElementException;
 import java.util.Stack;
 import java.util.UUID;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.RejectedExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Pattern;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -32,6 +41,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
+import javax.swing.text.DefaultCaret;
+
 import io.aesy.musicbrainz.client.MusicBrainzClient;
 import io.aesy.musicbrainz.client.MusicBrainzJerseyClient;
 import io.aesy.musicbrainz.client.MusicBrainzJerseyClient.Builder;
@@ -58,17 +69,17 @@ public class MusicBrainzPanel extends JPanel implements ActionListener {
 	protected int mblimit;
 	protected boolean update;
 	protected String basedir;
+	protected String rw;
 	private GridBagLayout layout = new GridBagLayout();
 	private JTextField searchField = new JTextField(new AlphaNumDocument(36),"",86);
-	private JTextArea outArea = new JTextArea(14,79);
+	protected JTextArea outArea = new JTextArea(14,79);
 	private JScrollPane outPane = new JScrollPane(outArea);
 	private JButton go = new JButton(new ImageIcon(MFTools.loadIcon("images/submit.png").getScaledInstance(18,18,Image.SCALE_DEFAULT )));
 	//private JButton help = new JButton("Help");
 	
 	    
     /* Inner classes */
-	
-    private class LocalKeyAdapter extends KeyAdapter {
+	private class LocalKeyAdapter extends KeyAdapter {
     	int ctrl=KeyEvent.CTRL_DOWN_MASK;
     	int alt=KeyEvent.ALT_DOWN_MASK;
     	int shift=KeyEvent.SHIFT_DOWN_MASK;
@@ -79,7 +90,13 @@ public class MusicBrainzPanel extends JPanel implements ActionListener {
     			if ((e.getModifiersEx() & alt ) == alt) return;
     			if ((e.getModifiersEx() & shift ) == shift) return;
     			switch(e.getKeyCode()) {
-					case KeyEvent.VK_ENTER: findme(searchField.getText()); e.consume(); break;
+					case KeyEvent.VK_ENTER:
+						try {
+						findme(searchField.getText());
+						}
+						catch(InterruptedException ei) {}
+						e.consume();
+					break;
 					case KeyEvent.VK_F4: ; e.consume(); break;
 					//default: System.out.println("Pressed: " + e.getExtendedKeyCode());
     			}
@@ -97,6 +114,7 @@ public class MusicBrainzPanel extends JPanel implements ActionListener {
 		mblimit = LibraryTagWindow.frame.setup.getLibraryTagLimit();
 		update = LibraryTagWindow.frame.setup.getLibraryTagUpdate();
 		basedir = LibraryTagWindow.frame.setup.getLibraryTagBasedir();
+		rw = LibraryTagWindow.frame.setup.getLibraryTagRW();
 	}
     
     private void configureControls() {
@@ -107,6 +125,14 @@ public class MusicBrainzPanel extends JPanel implements ActionListener {
     	outArea.setForeground(Color.WHITE);
     	outArea.setBackground(Color.BLACK);
     	outArea.setEditable(false);
+    	
+    	// This needs JDK 5
+    	DefaultCaret caret = (DefaultCaret)outArea.getCaret();
+    	caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+    	// For JDK 1.4.2 use this instead
+    	//outArea.append(...);
+    	//outArea.setCaretPosition(outArea.getDocument().getLength());
+    	
     	//help.setPreferredSize(new Dimension(104,26));
 		//help.addActionListener(this);
 	}
@@ -162,43 +188,8 @@ public class MusicBrainzPanel extends JPanel implements ActionListener {
      * File-Functions *
      ******************/
 	
-	public synchronized List<String> findArtist(String artistname, String title, String start, String extensionPattern) {
-		final Stack<File> dirs = new Stack<>();
-	    final File startdir = new File(start);
-	    final Pattern p = Pattern.compile(extensionPattern, Pattern.CASE_INSENSITIVE);
-	    artistname = artistname.toLowerCase();
-	    title = title.toLowerCase();
-	        
-	    List<String> foundFiles = new ArrayList<>();
-	        
-	    if (!startdir.isDirectory()) return foundFiles;
+	
 	    
-	    dirs.push(startdir);
-	    while (!dirs.isEmpty()) {
-	    	File currentDir = dirs.pop();
-	        File[] files = currentDir.listFiles();
-	        if (files == null) continue; 
-	            
-	        for (File file : files) {
-	        	if (file.isDirectory()) {
-	        		String ff = file.getAbsolutePath().toLowerCase();
-	        		if (ff.contains("flac") || ff.contains("mp3") || ff.contains("ogg"))
-	                if (ff.contains(file.separatorChar + artistname + file.separatorChar) && ff.contains(title)) {
-	        			for (File nestedFile : file.listFiles()) {
-	                    	if (p.matcher(nestedFile.getName()).matches()) foundFiles.add(nestedFile.getAbsolutePath());
-	                    }
-	                    return foundFiles;
-	                } else dirs.push(file);
-	            }
-	        }
-	    }
-	    return foundFiles;
-	}
-	    
-	public synchronized List<String> getFileLocation( String artistname , String title) {
-		return findArtist( artistname,title, basedir, "(.*.flac$)|(.*.mp3$)|(.*.ogg$)");
-	}
-		
 	/* *****************
      * EVENT-Functions *
      *******************/
@@ -335,82 +326,42 @@ public class MusicBrainzPanel extends JPanel implements ActionListener {
 		return "Unknown";
 	}
 	
-	private void findme(String mbid) {
+	private void findme(String mbid) throws InterruptedException {
 		String mbidtype = getMbidType(mbid);
 		outArea.removeAll();
 		outArea.append("This is a " + mbidtype + "-MBID\n");
+		ExecutorService executor = Executors.newFixedThreadPool(2);
 		MusicBrainzClient client = MusicBrainzJerseyClient.createWithDefaults();
-		
+				
 		try {
 			switch (mbidtype) {
 				case "Artist":
 					//c1d4f2ba-cf39-460c-9528-6b827d3417a1 Yes
 					//24202038-7b02-4444-96c2-cf2fc7b81308 Jon Anderson
-					Artist artist = client.artist().withId(UUID.fromString(mbid)).lookup().get();
-					outArea.append("Artist is: " + artist.getName() + "\n");
-					List<ReleaseGroup> rGL = client.releaseGroup().withArtist(artist).limitBy(mblimit).browse().get();
-					outArea.append("Artist has " + rGL.size() + " ReleaseGroups\n");
-					outArea.append("Only Albums are listed:\n");
-					for( int i=0; i<rGL.size(); i++ ) {
-						if(rGL.get(i).getPrimaryType()!=null)
-							if(rGL.get(i).getPrimaryType().getContent().equals("Album")) {
-								String title = rGL.get(i).getTitle();
-								if (title.length() > 38) title = title.substring(0, 38);
-								outArea.append(title + ": " + rGL.get(i).getId() + "\n");
-								if (update) {
-									//System.out.println(basedir);
-									//System.out.println(artist.getName());
-									//System.out.println(artist.getType()); // Group/Person
-									List<String> file = getFileLocation( artist.getName(), rGL.get(i).getTitle() );
-									for(int l=0; l<file.size(); l++)
-									System.out.println( file.get(l) );
-								}
-							}	
-					}
-					outArea.append("\n");
-					System.out.println( "Ready." );
+					ArtistThread artistWorker = new ArtistThread(client, mbid, executor);
+					executor.execute(artistWorker);
 					clearPanel();
 				break;
 				case "ReleaseGroup":
 					//b1176e7b-fa2e-3b28-959a-d8f55b5b6ccf
-					ReleaseGroup rG = client.releaseGroup().withId(UUID.fromString(mbid)).lookup().get();
-					outArea.append("ReleaseGroup is: " + rG.getTitle() + "\n");
-					List<Release> releases = client.release().withReleaseGroup(rG).limitBy(mblimit).browse().get();
-					outArea.append("ReleaseGroup has " + releases.size() + " Releases\n");
-					for( int i=0; i<releases.size(); i++ ) {
-						String title = releases.get(i).getTitle();
-						String country = releases.get(i).getCountry();
-						if(country==null) country="  "; // we format a little for outArea
-						if (title.length() > 35) title = title.substring(0, 35);
-						outArea.append(country + " " + title + ": " + releases.get(i).getId() + "\n");
-					}
-					outArea.append("\n");
+					ReleaseGroupThread rGWorker = new ReleaseGroupThread(client, mbid, executor);
+					executor.execute(rGWorker);
 					clearPanel();
 				break;
 				case "Release":
 					//0fd838c4-6d48-4a39-8ef9-282d94c2de4c
-					Release release = client.release().withId(UUID.fromString(mbid)).includeRecordings().lookup().get();
-					outArea.append("Release is: " + release.getTitle() + "\n");
-										
-					List<Recording> recording = client.recording().withRelease(release).limitBy(mblimit).browse().get();
-					outArea.append("Release has " + recording.size() + " Recordings\n");
-					for( int i=0; i<recording.size(); i++ ) {
-						String title = recording.get(i).getTitle();
-						if (title.length() > 38) title = title.substring(0, 38);
-						outArea.append(title + ": " + recording.get(i).getId() + "\n");
-						System.out.println(recording.get(i).getIsrcList());
-					}
-					outArea.append("\n");
+					ReleaseThread rWorker = new ReleaseThread(client, mbid, executor);
+					executor.execute(rWorker);
 					clearPanel();
 				break;
 				case "Recording":
 					//ac3f3784-3801-4785-b932-e20014522ed1
 					//77b1e0a9-b859-4fa8-b946-baf585c5c084
 					//3ec90fca-c135-4819-8e3a-98c443ef522f
-					Recording rec = client.recording().withId(UUID.fromString(mbid)).includeReleases().lookup().get();
+					/*Recording rec = client.recording().withId(UUID.fromString(mbid)).includeReleases().lookup().get();
 					outArea.append("Recording is: " + rec.getTitle() + "\n\n");
 					System.out.println(rec.getIsrcList());
-					clearPanel();
+					clearPanel();*/
 				break;	
 			}
 		} catch( NoSuchElementException e ) {
@@ -418,13 +369,16 @@ public class MusicBrainzPanel extends JPanel implements ActionListener {
 			int len = e.getStackTrace().length;
 			for (int i = 0; i < len; i++)
 				System.out.println(stacktrace[i].toString());
-		}	
+		}
 	}
 	
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource().equals(go)) {
+			try {
 			findme(searchField.getText());
 			searchField.requestFocusInWindow();
+			}
+			catch (InterruptedException ie) {}
 		}
 		//else if (e.getSource().equals(help)) System.out.println("Not implemented yet.");
 		else System.out.println("Unknown event.");

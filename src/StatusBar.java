@@ -26,6 +26,7 @@ public class StatusBar extends JLabel implements ActionListener {
 	String MSG1004 = "String too short.";
 	String MSG1005 = "String not valid.";
 	String MSG1006 = "records found";
+	String MSG1007 = "Ready.";
 	//1101-1199 File I/O Messages
 	String MSG1101 = "File opened";
 	String MSG1102 = "File closed";
@@ -102,6 +103,7 @@ public class StatusBar extends JLabel implements ActionListener {
 			case 1003: setStatus(MSG1003); break;
 			case 1004: setStatus(MSG1004); break;
 			case 1005: setStatus(MSG1005); break;
+			case 1007: setStatus(MSG1007); break;
 			//case 1201: setStatus(MSG1201); break;
 			//case 1202: setStatus(MSG1202); break;
 			case 1203: setStatus(MSG1203); break;

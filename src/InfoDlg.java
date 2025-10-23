@@ -105,7 +105,7 @@ public class InfoDlg extends JDialog implements WindowListener{
 			"<html><head></head>"
 			+ "<BODY style=\"background-image:url(../images/mwl.png)\" bgcolor=#A3B8CB>"
 			+ "<center><h2 class=hilight>" + "LibraryTag"
-			+ "</h2><h4>Version: 0.02</h4>"
+			+ "</h2><h4>Version: 0.03</h4>"
 			+ "<h5>(c) 2025 Frank Ambacher</h5>"
 			+ "<h5>Included Libraries:<br>"
 			+ "MusicBrainz-API-Client by Isac Wertwein, JAudioTagger by Paul Taylor</h5></center></body></html>");

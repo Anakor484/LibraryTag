@@ -30,6 +30,7 @@ public class LibraryTagSetup extends Properties {
 	public int getLibraryTagLimit() { return Integer.valueOf(getProperty("MB.Limit","100")).intValue(); }
 	public boolean getLibraryTagUpdate() { return Boolean.valueOf(getProperty("LibraryTag.Update","false")).booleanValue(); }
 	public String getLibraryTagBasedir() { return String.valueOf( getProperty("LibraryTag.Basedir","/") ); }
+	public String getLibraryTagRW() { return String.valueOf( getProperty("LibraryTag.RW","ro") ); }
 	
 	// setter
 	public void setLibraryTagHeight(int h){ setProperty("LibraryTag.Height", String.valueOf(h).toString()); }
@@ -41,6 +42,7 @@ public class LibraryTagSetup extends Properties {
 	public void setLibraryTagLimit(int limit){ setProperty("MB.Limit", String.valueOf(limit).toString()); }
 	public void setLibraryTagUpdate(boolean update){ setProperty("LibraryTag.Update", String.valueOf(update)); }
 	public void setLibraryTagBasedir(String basedir){ setProperty("LibraryTag.Basedir", String.valueOf(basedir)); }
+	public void setLibraryTagRW(String rw){ setProperty("LibraryTag.RW", String.valueOf(rw)); }
 				
 	// Own management and private
 	private String setLibraryTagLF(){

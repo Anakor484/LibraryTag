@@ -12,6 +12,7 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.SwingUtilities;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
 
@@ -35,6 +36,7 @@ public class LibraryTagWindow extends JFrame implements ActionListener, MenuList
 			setup.setLibraryTagLimit( ((MusicBrainzPanel)panel.getPanel()).mblimit);
 			setup.setLibraryTagUpdate( ((MusicBrainzPanel)panel.getPanel()).update);
 			setup.setLibraryTagBasedir( ((MusicBrainzPanel)panel.getPanel()).basedir);
+			setup.setLibraryTagRW( ((MusicBrainzPanel)panel.getPanel()).rw);
 			setup.saveSetup();
 		}
 		@Override public void windowClosed(WindowEvent e) { System.exit(0); }

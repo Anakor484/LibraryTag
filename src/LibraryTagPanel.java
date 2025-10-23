@@ -7,10 +7,11 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import javax.swing.JMenuBar;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 public class LibraryTagPanel extends JPanel{
 	private static final long serialVersionUID = 1L;
-	private JPanel currentPanel;
+	protected JPanel currentPanel;
 		
 	public LibraryTagPanel() {
 		setOpaque(true);
