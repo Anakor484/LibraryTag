@@ -1,9 +1,10 @@
 Version                                   Changes
 0.01      First public Pre-View
 0.02      Pre-View                        Corrected a bug in english Locale
-0.03      Pre-View                        Changed the names in the Properties file. Delete LibraryTag.prp if available.
-                                          Added 3 new properties. MB.Limit sets the limit of lookup requests, default is 100.
-                                          LibraryTag.Update [ true/false ] is the major switch for updating library.
+0.03      Will be released this week      Changed the names in the Properties file. Delete LibraryTag.prp if available.
+                                          Added 4 new properties. MB.Limit sets the limit of lookup requests, default is 100.
+                                          LibraryTag.Update [ true/false ] is the major switch for acessing the library.
                                           LibraryTag.Basedir is the position of the library. For Windows for example it can
                                           be "c:\". For Linux/Unixes the dafault is "/".
-                                          Added searching for files.
+                                          LibraryTag.RW [ro/rw] sets wether the library access should be readonly or readwrite.
+                                          Added searching for files, but readonly access.
