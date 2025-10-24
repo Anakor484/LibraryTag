@@ -21,31 +21,28 @@ public abstract class MBThreads implements Runnable {
 	protected JTextArea outArea;
     protected MusicBrainzClient client;
     protected String mbid;
-    protected OutSpinner currentSpinner;
-    protected ExecutorService executor;
+    protected OutSpinner spinner;
     protected int mblimit;
     protected boolean update;
     protected String basedir;
     protected StatusBar sb;
 	
-	public MBThreads(MusicBrainzClient client, String mbid, ExecutorService executor){
+	public MBThreads(MusicBrainzClient client, String mbid ){
 		this.client=client;
        	this.mbid=mbid;
-       	this.executor=executor;
        	this.outArea = ((MusicBrainzPanel)LibraryTagWindow.frame.panel.currentPanel).outArea;
        	this.update = ((MusicBrainzPanel)LibraryTagWindow.frame.panel.currentPanel).update;
        	this.mblimit = ((MusicBrainzPanel)LibraryTagWindow.frame.panel.currentPanel).mblimit;
        	this.basedir = ((MusicBrainzPanel)LibraryTagWindow.frame.panel.currentPanel).basedir;
        	this.sb = LibraryTagWindow.frame.sb;
-       	//currentSpinner = new OutSpinner(outArea);
-	}
+    }
 	
 	public void run() {
     }
 	
 	private synchronized void stopSpinner() throws Exception {
-		if (currentSpinner != null && !currentSpinner.isDone()) {
-			currentSpinner.cancel(true); currentSpinner.done();
+		if (spinner != null && !spinner.isDone()) {
+			spinner.cancel(true); spinner.done();
 		}
 	}
 	

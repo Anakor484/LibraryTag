@@ -338,20 +338,20 @@ public class MusicBrainzPanel extends JPanel implements ActionListener {
 				case "Artist":
 					//c1d4f2ba-cf39-460c-9528-6b827d3417a1 Yes
 					//24202038-7b02-4444-96c2-cf2fc7b81308 Jon Anderson
-					ArtistThread artistWorker = new ArtistThread(client, mbid, executor);
+					ArtistThread artistWorker = new ArtistThread(client, mbid);
 					executor.execute(artistWorker);
 					clearPanel();
 				break;
 				case "ReleaseGroup":
 					//b1176e7b-fa2e-3b28-959a-d8f55b5b6ccf
-					ReleaseGroupThread rGWorker = new ReleaseGroupThread(client, mbid, executor);
-					executor.execute(rGWorker);
+					/*ReleaseGroupThread rGWorker = new ReleaseGroupThread(client, mbid, executor);
+					executor.execute(rGWorker);*/
 					clearPanel();
 				break;
 				case "Release":
 					//0fd838c4-6d48-4a39-8ef9-282d94c2de4c
-					ReleaseThread rWorker = new ReleaseThread(client, mbid, executor);
-					executor.execute(rWorker);
+					/*ReleaseThread rWorker = new ReleaseThread(client, mbid, executor);
+					executor.execute(rWorker);*/
 					clearPanel();
 				break;
 				case "Recording":
