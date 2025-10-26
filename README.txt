@@ -27,6 +27,21 @@
    Again select, copy and paste a Release-MBID. Again the Recordings will be listed in the Output area.
    As last step you can do so for the Recording-MBID.
 
+3.1 Finding Media Library Files
+
+    For finding available media files, LibraryTag has a directory-specification how a consistent Library
+    should be organized. The structure which we use are <Drive>\<FileType>\<Artist*>\<*Album>\<*Tracks>.
+    For example valid path on Windows would be:
+    m:\FLAC\The Beatles\1964-01 Beatles For Sale\08 - Eight Days A Week.flac
+    or
+    m:\MP3\Yes\1973-LL Yessongs\06 - Mood For A Day.flac
+    or on Linux and Unixes
+    <mountpoint>/OGG/King Crimson/1981-08 Discipline/Frame by Frame.ogg
+
+    If your Library doesn't meet the specification you have 2 chances:
+    1: Create Symbolic Links using the Windows tool mklink on the specified drive.
+    2: Re-Organize your Library
+
 4. License
 
-   MIT, see LICENSE file
+   See LICENSE files in the Licenses subdirectory
