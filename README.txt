@@ -13,6 +13,7 @@
    the file. Open the Properties of the Link. On the Link-Tab you can choose the icon of the Application
    directory. The Application itself don't make any use of your Registry. If you wish the removing, just
    delete the directory, included files and link on the desktop.
+   After installation take a look at LibraryTag.prp to edit properties.
 
 3. Usage
 
