@@ -8,5 +8,5 @@ Version                                   Changes
                                           be "c:\". For Linux/Unixes the dafault is "/".
                                           LibraryTag.RW [ro/rw] sets wether the library access should be readonly or readwrite.
                                           Added searching for files, but readonly access.
-0.04      Will be released in a week      
+0.04      Will be released in a week      Changed Readme to point out to LibraryTag.prp
           maybe.
