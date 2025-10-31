@@ -9,5 +9,6 @@ Version                                   Changes
                                           LibraryTag.RW [ro/rw] sets wether the library access should be readonly or readwrite.
                                           Added searching for files, but readonly access.
                                           Changed Readme to point out to LibraryTag.prp
-0.04      Will be released in a week      
-          maybe.
+0.04      Will be released in a week      Added reading tags from the Library.
+          maybe. This is the last ro
+          version.
