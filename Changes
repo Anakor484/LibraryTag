@@ -11,6 +11,6 @@ Version                                   Changes
                                           Changed Readme to point out to LibraryTag.prp
 0.04      Will be released in a week      Added reading tags from the Library. This is still underway...
           maybe. This is the last ro      Added support for FlatLightLaf and FlatDarkLaf. Both can be set in the properties.
-          version.
+          version.                        Added Help with 2 help files for general help and properties file.
           Removed support for FlatLaf     I removed support FlatLaf, because of native libraries. Added theme for Metal. Added new
                                           images für buttons. Going now ahead with get reading tags from library.
