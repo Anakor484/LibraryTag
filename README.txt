@@ -4,7 +4,7 @@
    To install a JDK on Windows, download the x64 installer or ziped archive from the official Oracle
    website or OpenJDK website, run Setup and configure the JAVA_HOME environment variable and add
    %JAVA_HOME%\bin to the Path variable. If all goes well, you can run "java -version" from any command
-   prompt. The latest JDK-25 works well.
+   prompt. The latest JDK-25 don't works, use the latest JDK 8 update (JDK1.8.0_461).
   
 2. Installation and Removing
 
