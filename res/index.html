@@ -1,0 +1,88 @@
+<html><head>
+<title>LibraryTag Help</title>
+<style>
+body { font-family: Arial; margin: 5px; text-align: left; }
+h1 { font-size: 16px; margin: 18px 9px; }
+h2 { font-size: 14px; margin: 16px 8px; }
+h3 { font-size: 12px; margin: 14px 7px; }
+h4 { font-size: 10px; margin: 12px 6px; }
+h5 { font-size:  8px; margin: 10px 5px; }
+h6 { font-size:  6px; margin:  8px 4px; }
+</style></head>
+<body bgcolor=#A3B8CB>
+<h2>LibraryTag</h2>
+<p>
+This program was created to get MBIDs from the MusicBrainz service and store them in MP3 or
+FLAC files in a library. A music player can then retrieve further MusicBrainz data while
+playing the music files.
+</p>
+<h3>Prerequisites</h3>
+<p>
+A Java 8+ JRE or JDK.<br>
+<br>
+On Windows, download the x64 installer or <b>zipped archive</b> from the official Oracle or
+OpenJDK website, run the setup, and configure the <code>JAVA_HOME</code> environment variable
+and add <code>%JAVA_HOME%\bin</code> to the Path. If all goes well, you can run
+<code>java -version</code> from any command prompt. The latest JDK-25 does not work,
+<a href="howto.html">see here</a>.</p>
+<h3>Installation and Removal</h3>
+<p>
+If you received the program as a ZIP archive, unzip it into an empty folder. Drag the JAR file
+onto your desktop while pressing the <kbd>Alt</kbd> key to create a shortcut there. Make sure
+you do <b>not move or copy</b> the file. Open the <b>properties of the shortcut</b>. On the
+Shortcut tab, you can choose the icon from the application directory.
+</p>
+<p>
+The application itself does not use the Windows registry. To remove it, simply delete the
+directory including all files and the desktop shortcut.
+</p>
+<p>
+After installation, take a look at <a href="properties.html">LibraryTag.prp</a> to edit
+properties.
+</p>
+<h3>Usage</h3>
+<p>
+This is a pre-release, so not all MusicBrainz functions are supported yet. The application
+should run on any platform where a Java 8+ runtime is available. This includes Linux, macOS,
+Unix, and Windows.
+</p>
+<p><b>How to use:</b></p>
+<ol>
+    <li>Start the program.</li>
+    <li>Copy a valid <b>Artist-MBID</b> from the MusicBrainz website using
+        <kbd>Ctrl</kbd>+<kbd>C</kbd> and paste it into the input field using
+        <kbd>Ctrl</kbd>+<kbd>V</kbd>.</li>
+    <li>Press the Go button or <kbd>Enter</kbd>.</li>
+    <li>Requested data will be printed in the output area. Select a <b>Release-MBID</b> in the
+        output area, copy it with <kbd>Ctrl</kbd>+<kbd>C</kbd>, paste it into the input field, and
+        press <kbd>Enter</kbd>.</li>
+    <li>The releases will be listed at the end of the output area. Repeat for a
+        <b>Recording-MBID</b>.</li>
+</ol>
+<p>
+If the settings in the properties file allow it, your library will be <b>scanned</b> for
+corresponding files.
+</p>
+<h2>Finding Media Library Files</h2>
+<p>
+For finding available media files, LibraryTag has a directory specification for how a
+consistent library should be organized. The structure used is:
+</p><br>
+<center><div class="path">Drive:\FileType\Artist*\*Album\*Tracks</div></center>
+<h3>Examples</h3>
+<center>
+    <div class="path">m:\FLAC\The Beatles\1964-01 Beatles For Sale\08 - Eight Days A Week.flac</div>
+    <div class="path">m:\MP3\Yes\1973-LL Yessongs\06 - Mood For A Day.flac</div>
+    <div class="path">/mnt/music/OGG/King Crimson/1981-08 Discipline/Frame by Frame.ogg</div>
+</center>
+<p>
+If your library does not meet this specification, you have two options:
+</p>
+<ol>
+    <li>Create symbolic links using the Windows tool <code>mklink</code> on the specified drive.</li>
+    <li>Re-organize your library.</li>
+</ol>
+
+<h3>Changes</h3>
+<p>See <a href="changes.html">changes</a>, <a href="howto.html">Howto</a>.</p>
+</body></html>

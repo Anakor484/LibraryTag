@@ -1,0 +1,30 @@
+<html><head>
+<title>LibraryTag Help</title>
+<style>
+body { font-family: Arial; margin: 5px; text-align: left; }
+h1 { font-size: 16px; margin: 18px 9px; }
+h2 { font-size: 14px; margin: 16px 8px; }
+h3 { font-size: 12px; margin: 14px 7px; }
+h4 { font-size: 10px; margin: 12px 6px; }
+h5 { font-size:  8px; margin: 10px 5px; }
+h6 { font-size:  6px; margin:  8px 4px; }
+</style></head>
+<body bgcolor=#A3B8CB>
+<p><i> I have some MP3's which can't be found. What can I do?</i><br><br>
+With some MP3's you will get a <code>Found: Not found-"Album Title"</code> if the Album-Artist tag isn't
+set properly in the MP3 itself.</p>
+<p><i> LibraryTag only shows "This is a false MBID", nothing more.</i><br><br>
+Install openJDK1.8.0_461! The main program would work with e.g Java-25, but the underlying MusicBrainz-Client
+doesn't. Later, when the program is fully implemented, I will search for a solution, but for now Java 8 is
+the only choice.</p>
+<p><i> On Windows I have Java-25 installed and want to execute the program under a secondary JDK. How can I
+accomplish this?</i><br><br>
+Install openJDK1.8.0_461! Then create a startup.cmd file in the program directory with these lines:<br><br>
+<code>setlocal<br>
+set JAVA_HOME=Path\to\JDK\JDK1.8.0_461<br>
+set JRE_HOME=%JAVA_HOME%\JRE<br>
+set PATH=.\;%JRE_HOME%\bin;%JAVA_HOME%\bin;%PATH%<br>
+%JRE_HOME%\bin\javaw.exe -jar "Path\to\Jar\LibraryTag.jar"<br>
+endlocal.</code><br><br>
+Create a link on your desktop which starts startup.cmd.</p>
+</body></html>

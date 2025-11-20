@@ -1,0 +1,64 @@
+<html>
+<head>
+    <title>LibraryTag Help</title>
+    <style>
+        body { font-family: Arial; margin: 10px; text-align: left; }
+        .example { font-family: Courier New, monospace; font-size: 12px; background-color: #f8f8f8;
+            	   padding: 10px; border: 1px solid #ccc; white-space: pre; text-align: left; margin: 10px 0; }
+    </style>
+</head>
+<body bgcolor="#A3B8CB">
+
+<p><code>LibraryTag.prp</code> is an automatically created plain text file. It resides in the
+program's home directory. The lines are key/value-paired settings.<br>
+&nbsp;
+
+<p>A typical file contains these lines:<br>
+<center>
+<div class="example">#LibraryTag - Properties File <br>
+#Sat Nov 15 07:21:18 CET 2025 <br>
+LibraryTag.Basedir=m:\\ <br>
+LibraryTag.Height=626 <br>
+LibraryTag.LF=Metal <br>
+LibraryTag.RW=ro <br>
+LibraryTag.Update=true <br>
+LibraryTag.Width=908 <br>
+LibraryTag.X=32 <br>
+LibraryTag.Y=141 <br>
+MB.Limit=100</div>
+</center>
+
+<p><strong>Comments:</strong><br>
+Lines beginning with a '#' are comments. The first line is the program name; the
+second line is the date and time of creation.
+
+<p><strong>LibraryTag.X, LibraryTag.Y:</strong><br>
+These are the last window coordinates. If the program fails to start due to invalid
+coordinates, reset them to 0.
+
+<p><strong>LibraryTag.Width, LibraryTag.Height:</strong><br>
+The width and height of the program's main window.
+
+<p><strong>LibraryTag.LF:</strong><br>
+This setting defines the Java Look &amp; Feel, which determines the appearance of the app.
+Valid values are: Metal, Nimbus, GTK, CDE/Motif, Windows. If this line does not exist,
+a new line will be created based on the operating system. If the Line includes a non existent
+Look &amp; Feel the default Metal will be loaded.
+
+<p><strong>LibraryTag.Basedir:</strong><br>
+This sets the drive, mount point, and path of your music library. On Windows, <code>m:\\</code>
+represents the escaped drive "m:\". On Linux, a path like <code>/mnt/m/</code> would be valid.
+
+<p><strong>LibraryTag.Update:</strong><br>
+If set to <code>true</code>, access to the Media Library is enabled. If set to <code>false</code>,
+no access is allowed.
+
+<p><strong>LibraryTag.RW:</strong><br>
+This setting can be <code>ro</code> (read-only) or <code>rw</code> (read-write). Tags will be written
+to files only if <code>rw</code> is set.
+
+<p><strong>MB.Limit:</strong><br>
+This sets the limit for a single MusicBrainz query.
+
+</body>
+</html>
