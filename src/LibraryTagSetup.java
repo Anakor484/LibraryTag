@@ -13,7 +13,9 @@ import java.io.IOException;
 import java.util.Properties;
 
 public class LibraryTagSetup extends Properties {
+	/* Class-Variables */
 	private static final long serialVersionUID = 2L;
+	
 	// getter
 	public String getLibraryTagLF(){
 		String lf = getProperty("LibraryTag.LF","none");
@@ -43,18 +45,18 @@ public class LibraryTagSetup extends Properties {
 	public void setLibraryTagUpdate(boolean update){ setProperty("LibraryTag.Update", String.valueOf(update)); }
 	public void setLibraryTagBasedir(String basedir){ setProperty("LibraryTag.Basedir", String.valueOf(basedir)); }
 	public void setLibraryTagRW(String rw){ setProperty("LibraryTag.RW", String.valueOf(rw)); }
-				
-	// Own management and private
+	
+	// This Method is only executed, if L&F is set to 'none' in properties file
 	private String setLibraryTagLF(){
 		String lf;
 		String os = System.getenv("OS");
 		if(os==null) os = System.getProperty("os.name");
 		else if(os.equals("")) os = System.getProperty("os.name");
-	 	if(os.equals("Windows_NT")) lf = "Windows"; 
+		if(os.equals("Windows_NT")) lf = "Windows"; 
 	    else if(os.equals("Windows")) lf = "Windows Classic";
 	    else if(os.toLowerCase().indexOf("inux") >= 0) lf = "Nimbus";
 	    else if(os.toLowerCase().indexOf("mac") >= 0) lf = "Nimbus";
-	    else if(os.toLowerCase().indexOf("sunos") >= 0) lf = "CDE/Motif";
+	    else if(os.toLowerCase().indexOf("unos") >= 0) lf = "CDE/Motif";
 	    else if(os.toLowerCase().indexOf("nix") >= 0) lf = "CDE/Motif";
 	    else if(os.toLowerCase().indexOf("aix") >= 0) lf = "CDE/Motif";
 	    else lf = "Metal";

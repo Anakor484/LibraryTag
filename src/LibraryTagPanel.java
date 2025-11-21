@@ -3,37 +3,31 @@
  * For wishes, questions mail to anakor@gmx.net.
  */
 
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import javax.swing.JMenuBar;
+import java.awt.BorderLayout;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
-public class LibraryTagPanel extends JPanel{
+public class LibraryTagPanel extends JPanel {
+	/* Class Variables */
 	private static final long serialVersionUID = 1L;
+	
+	/* Instance Variables */
 	protected JPanel currentPanel;
-		
+	
+	/* Constructors */
 	public LibraryTagPanel() {
-		setOpaque(true);
-		setLayout(new FlowLayout(FlowLayout.LEFT));
+		setLayout(new BorderLayout());
 	}
 	
-	public JPanel getPanel() {
-		return currentPanel;
-	}
-	
-	private Dimension calcSize(){
-		int h = 67+JMenuBar.HEIGHT + getPreferredSize().height + LibraryTagWindow.frame.sb.getPreferredSize().height;
-		int w = 10+getPreferredSize().width + LibraryTagWindow.frame.getInsets().left + LibraryTagWindow.frame.getInsets().right;
-		return new Dimension(w,h);
-	}
+	/* Methods */
+	public JPanel getPanel() { return currentPanel; }
 	
 	public void addMusicBrainzPanel() {
 		if (currentPanel!=null) remove(currentPanel);
-		currentPanel = new MusicBrainzPanel(); add(currentPanel);
-		((MusicBrainzPanel)currentPanel).startPanel();
-		setPreferredSize(currentPanel.getPreferredSize());
-		LibraryTagWindow.frame.setSize(calcSize());
-		validate();
+		
+		currentPanel = new MusicBrainzPanel();
+		add(currentPanel); //((MusicBrainzPanel)currentPanel).startPanel();
+		LibraryTagWindow.frame.setSize(LibraryTagWindow.frame.getPreferredSize());
+		
 	}
 }

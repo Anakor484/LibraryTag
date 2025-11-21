@@ -3,31 +3,95 @@
  * For wishes, questions mail to anakor@gmx.net.
  */
 
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Image;
+import java.awt.Insets;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Vector;
+
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.ActionMap;
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
+import javax.swing.InputMap;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JRootPane;
+import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
-import javax.swing.event.MenuEvent;
-import javax.swing.event.MenuListener;
+import javax.swing.UIManager;
+import javax.swing.UIManager.LookAndFeelInfo;
+import javax.swing.plaf.ColorUIResource;
+import javax.swing.plaf.FontUIResource;
+import javax.swing.plaf.metal.DefaultMetalTheme;
+import javax.swing.plaf.metal.MetalLookAndFeel;
 
-public class LibraryTagWindow extends JFrame implements ActionListener, MenuListener {
-	/* Class variable */
+public class LibraryTagWindow extends JFrame implements ActionListener {
+	/* Class Variables */
 	private static final long serialVersionUID = 1L;
 	public static LibraryTagWindow frame;
-	/* Instance Variable */
+	
+	/* Instance Variables */
 	protected LibraryTagSetup setup = new LibraryTagSetup();
 	protected StatusBar sb = new StatusBar(this);
 	protected LibraryTagPanel panel = new LibraryTagPanel();
 	private JMenu     m_file, m_help;
-	private JMenuItem mi_MusicBrainz, mi_about, mi_license;
+	private JMenuItem mi_MusicBrainz, mi_about, mi_license, mi_help;
 		
 	/* Inner Classes */
+	private class LibraryTagTheme extends DefaultMetalTheme {
+		@Override public String getName() { return "LibraryTagTheme"; }
+	    private final ColorUIResource primary1   = new ColorUIResource(new Color(0x1e3d59));
+	    private final ColorUIResource primary2   = new ColorUIResource(new Color(0x4a7bb7)); // Menu background
+	    private final ColorUIResource primary3   = new ColorUIResource(new Color(0xa3b8cb)); // ScrollBar border, StatusBar back
+	    private final ColorUIResource secondary1 = new ColorUIResource(new Color(0x2c3e50)); // Component border
+	    private final ColorUIResource secondary2 = new ColorUIResource(new Color(0x2c3e50)); // Panel border
+	    private final ColorUIResource secondary3 = new ColorUIResource(new Color(0xa3b8cb));
+	    
+	    @Override protected ColorUIResource getPrimary1()   { return primary1; }
+	    @Override protected ColorUIResource getPrimary2()   { return primary2; }
+	    @Override protected ColorUIResource getPrimary3()   { return primary3; }
+	    @Override protected ColorUIResource getSecondary1() { return secondary1; }
+	    @Override protected ColorUIResource getSecondary2() { return secondary2; }
+	    @Override protected ColorUIResource getSecondary3() { return secondary3; }
+	    @Override public FontUIResource getControlTextFont() {
+	        return new FontUIResource("Arial", Font.PLAIN, 13);
+	    }
+	    
+	    public LibraryTagTheme() {
+	    	super();
+	    	sb.setBackground(primary3);
+	    	UIManager.put("ProgressBar.background", Color.WHITE);
+	    	UIManager.put("TextArea.background", Color.BLACK);
+	    	UIManager.put("TextArea.foreground", Color.WHITE);
+	    	UIManager.put("TextArea.font", new Font("Consolas", Font.PLAIN, 13));
+	    	UIManager.put("TextArea.selectionBackground", Color.WHITE);
+	    	UIManager.put("TextArea.selectionForeground", Color.BLACK);
+	    	UIManager.put("TextArea.margin", new Insets(2, 4, 2, 4));
+	    	UIManager.put("Button.background", Color.WHITE);
+	    	UIManager.put("EditorPane.background", primary3);
+	        UIManager.put("EditorPane.border", BorderFactory.createEmptyBorder());
+	        UIManager.put("ScrollPane.background", primary3);
+	        UIManager.put("ScrollPane.border", BorderFactory.createEmptyBorder());
+	        
+	        // Update all Windows
+	        for (Window w : Window.getWindows()) {
+	            SwingUtilities.updateComponentTreeUI(w);
+	            w.pack();
+	        }
+	    }
+	}
 		
 	class LibraryTagWindowAdapter extends WindowAdapter {
 		@Override public void windowClosing(WindowEvent e) {
@@ -40,77 +104,116 @@ public class LibraryTagWindow extends JFrame implements ActionListener, MenuList
 			setup.saveSetup();
 		}
 		@Override public void windowClosed(WindowEvent e) { System.exit(0); }
-		@Override public void windowOpened(WindowEvent e) {
-			// Load the setup
-			setup.loadSetup();
-			setSize(setup.getLibraryTagSize());
-			setLocation(setup.getLibraryTagLocation());
-			MFTools.setLF(setup.getLibraryTagLF());
-			panel.addMusicBrainzPanel();
-		}
+		@Override public void windowOpened(WindowEvent e) { panel.addMusicBrainzPanel(); }
 	}
 	
-	/*class LocalKeyAdapter extends KeyAdapter {
-		public void keyPressed(KeyEvent e) {
-			if (e.getSource().equals(m_file)){
-				if (e.getModifiers()!=0) return; // Ctrl,Alt etc
-				switch(e.getKeyCode()) {
-					case KeyEvent.VK_RIGHT:
-						if (m_file.isPopupMenuVisible()) m_file.setPopupMenuVisible(false);
-						m_file.setSelected(false); m_edit.setSelected(true); break;
-					case KeyEvent.VK_LEFT:
-						if (m_file.isPopupMenuVisible()) m_file.setPopupMenuVisible(false);
-						m_file.setSelected(false); m_help.setSelected(true);
-						break;
-				}
-			}
-			else if (e.getSource().equals(m_edit)) {
-				if (e.getModifiers()!=0) return; // Ctrl,Alt etc
-				switch(e.getKeyCode()) {
-					case KeyEvent.VK_RIGHT:
-						if (m_edit.isPopupMenuVisible()) m_edit.setPopupMenuVisible(false);
-						m_edit.setSelected(false); m_view.setSelected(true);
-					break;
-					case KeyEvent.VK_LEFT:
-						if (m_edit.isPopupMenuVisible()) m_edit.setPopupMenuVisible(false);
-						m_edit.setSelected(false); m_file.setSelected(true);
-					break;
-				}
-			}
-			else if (e.getSource().equals(m_view)) {
-				if (e.getModifiers()!=0) return; // Ctrl,Alt etc
-				switch(e.getKeyCode()) {
-					case KeyEvent.VK_RIGHT: m_view.setSelected(false); m_help.setSelected(true); break;
-					case KeyEvent.VK_LEFT: m_view.setSelected(false); m_edit.setSelected(true); break;
-				}
-			}
-			else if (e.getSource().equals(m_help)) {
-				if (e.getModifiers()!=0) return; // Ctrl,Alt etc
-				switch(e.getKeyCode()) {
-					case KeyEvent.VK_RIGHT: m_help.setSelected(false); m_file.setSelected(true); break;
-					case KeyEvent.VK_LEFT: m_help.setSelected(false); m_view.setSelected(true); break;
-				}
-			}
+	/* ***************
+	 * Event handling 
+	 *****************/
+	
+	private void globalHotKeys() {
+		getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("F1"), "help");
+		getRootPane().getActionMap().put("help", new AbstractAction() {
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		        if ((e.getModifiers() & (ActionEvent.CTRL_MASK
+		        						 | ActionEvent.ALT_MASK
+		        						 | ActionEvent.SHIFT_MASK)) == 0) {
+		            new HelpDlg();
+		        }
+		    }
+		});
+	}	
+	
+	
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if (!e.paramString().contains("Button1")) return;
+		if (!(panel.currentPanel instanceof MusicBrainzPanel)) return;
+		
+		if (e.getSource()==mi_MusicBrainz) {
+			// Which Panel is loaded?
+			String c = panel.getPanel().getClass().getName();
+			if(c==null) return;
+			else if(c!="MusicBrainzPanel") panel.addMusicBrainzPanel();
 		}
+		else if (e.getSource()==mi_about) {
+			new InfoDlg();
+			if (panel.currentPanel instanceof MusicBrainzPanel) {
+		        MusicBrainzPanel mbPanel = (MusicBrainzPanel) panel.currentPanel;
+		        mbPanel.searchField.requestFocusInWindow();
+		        mbPanel.searchField.selectAll();
+		    }
+		}
+		else if (e.getSource()==mi_license) {
+			new LicenseDlg();
+			if (panel.currentPanel instanceof MusicBrainzPanel) {
+		        MusicBrainzPanel mbPanel = (MusicBrainzPanel) panel.currentPanel;
+		        mbPanel.searchField.requestFocusInWindow();
+		        mbPanel.searchField.selectAll();
+		    }
+		}
+		else if (e.getSource()==mi_help) {
+			new HelpDlg();
+			if (panel.currentPanel instanceof MusicBrainzPanel) {
+		        MusicBrainzPanel mbPanel = (MusicBrainzPanel) panel.currentPanel;
+		        mbPanel.searchField.requestFocusInWindow();
+		        mbPanel.searchField.selectAll();
+		    }
+		}
+		else System.out.println(e.getSource());
 	}
-	public LocalKeyAdapter keyListener = new LocalKeyAdapter();*/
+	
+	
+	/* Constructor */
 	
 	public LibraryTagWindow() {
 		super("LibraryTag");
 		frame = this;
-		// Init the Frame
-		setIconImage(MFTools.loadIcon("images/LibraryTag.png"));
+		
+		// Load the setup
+		setup.loadSetup();
+		setLF(setup.getLibraryTagLF());
+		
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setLocationByPlatform(true);
-		setJMenuBar(createMenu());
+		setSize(setup.getLibraryTagSize());
+		setLocation(setup.getLibraryTagLocation());
+		setJMenuBar( createMenu() );
+		setIconImage( new IconLoader().loadIcon("LibraryTag.png") );
 		addWindowListener(new LibraryTagWindowAdapter());
 		
 		// Children
 		add(sb, "South");
 		add(panel, "Center");
 		pack();
-		setResizable(false);
+		globalHotKeys();
 		setVisible(true);
+	}
+	
+	private void setLF(String lf){
+		boolean found=false;
+				
+		if (lf.equals("Metal")) { MetalLookAndFeel.setCurrentTheme(new LibraryTagTheme()); }
+        try {
+			for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+				if (lf.equals(info.getName())) {
+					found=true; UIManager.setLookAndFeel(info.getClassName()); break;
+                }
+			}
+			
+			if(!found) {
+				if (lf.equals("Synthetica")) {
+            		UIManager.setLookAndFeel("de.javasoft.plaf.synthetica.SyntheticaLookAndFeel");
+            	}
+				else if (lf.equals("SyntheticaSimple2D")) {
+            		UIManager.setLookAndFeel("de.javasoft.plaf.synthetica.SyntheticaSimple2DLookAndFeel");
+            	}
+				else if (lf.equals("Synth")) {
+            		UIManager.setLookAndFeel("javax.swing.plaf.synth.SynthLookAndFeel");
+            	}
+			}
+        } catch (Exception ex) { System.err.println(ex); }
 	}
 
 	private JMenuBar createMenu() {
@@ -124,7 +227,7 @@ public class LibraryTagWindow extends JFrame implements ActionListener, MenuList
 		mi_names.add("MusicBrainz");
 		mi_names.add(LibraryTag.bundle.getString("MI_About"));
 		mi_names.add(LibraryTag.bundle.getString("MI_License"));
-		//mi_names.add(MusicFrame.bundle.getString("MI_Help"));
+		mi_names.add(LibraryTag.bundle.getString("MI_Help"));
 			
 		for(int m=0; m<m_names.size(); m++) {
 			JMenu menu;
@@ -136,22 +239,36 @@ public class LibraryTagWindow extends JFrame implements ActionListener, MenuList
 		
 			for(int mi=s[m]; mi<mi_names.size(); mi++ ) {
 				switch(mi) {
-					case 0: mi_MusicBrainz = menu.add(new JMenuItem(mi_names.get(mi), LibraryTag.bundle.getString("SC_OpenDB" ).charAt(0))); break;
-					case 1: mi_about       = menu.add(new JMenuItem(mi_names.get(mi), LibraryTag.bundle.getString("SC_About"     ).charAt(0))); break;
-					case 2: mi_license     = menu.add(new JMenuItem(mi_names.get(mi), LibraryTag.bundle.getString("SC_License"   ).charAt(0))); break;
-					//case 12: mi_help    = menu.add(new JMenuItem(mi_names.get(mi), MusicFrame.bundle.getString("SC_Help"      ).charAt(0))); break;
+					case 0:
+						mi_MusicBrainz = menu.add(new JMenuItem(mi_names.get(mi), LibraryTag.bundle.getString("SC_OpenDB").charAt(0)));
+						mi_MusicBrainz.setIcon(new ImageIcon(
+							new IconLoader().loadIcon("mb.png").getScaledInstance(16,16,Image.SCALE_DEFAULT )));
+					break;
+					case 1:
+						mi_about = menu.add(new JMenuItem(mi_names.get(mi), LibraryTag.bundle.getString("SC_About").charAt(0)));
+						mi_about.setIcon(new ImageIcon(
+							new IconLoader().loadIcon("about.png").getScaledInstance(16,16,Image.SCALE_DEFAULT )));
+					break;
+					case 2:
+						mi_license = menu.add(new JMenuItem(mi_names.get(mi), LibraryTag.bundle.getString("SC_License").charAt(0)));
+						mi_license.setIcon(new ImageIcon(
+							new IconLoader().loadIcon("doc.png").getScaledInstance(16,16,Image.SCALE_DEFAULT )));
+					break;
+					case 3:
+						mi_help	= menu.add(new JMenuItem(mi_names.get(mi), LibraryTag.bundle.getString("SC_Help").charAt(0)));
+						mi_help.setIcon(new ImageIcon(
+							new IconLoader().loadIcon("help.png").getScaledInstance(16,16,Image.SCALE_DEFAULT )));
+					break;
 				} /* switch */
 				if(mi>=s[m]+c[m]-1) break;
 			} /* for */ 
 		} /* for */
 	
 		// EventListeners
-		m_file.addMenuListener(this);
-		m_help.addMenuListener(this);
 		mi_MusicBrainz.addActionListener(this);
 		mi_about.addActionListener(this);
 		mi_license.addActionListener(this);
-		//mi_help.addActionListener(this);
+		mi_help.addActionListener(this);
 		
 		/*
 		// Tooltips
@@ -173,77 +290,4 @@ public class LibraryTagWindow extends JFrame implements ActionListener, MenuList
 		mi_tedit.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F4,0));*/
 		return(mb);
 	} /* createMenu */
-
-	/* ***************
-	 * Event handling 
-	 *****************/
-
-	@Override
-	public void menuSelected(MenuEvent e) {
-		((JMenu)e.getSource()).requestFocusInWindow();
-		//((JMenu)e.getSource()).addKeyListener(keyListener);
-	}
-
-	@Override
-	public void menuDeselected(MenuEvent e) {
-		//((JMenu)e.getSource()).removeKeyListener(keyListener);
-		getMostRecentFocusOwner().requestFocusInWindow();
-	}
-
-	@Override
-	public void menuCanceled(MenuEvent e) {
-		//((JMenu)e.getSource()).removeKeyListener(keyListener);
-	}
-	
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		if (!e.paramString().contains("Button1")) return;
-		if (e.getSource()==mi_MusicBrainz) {
-			//System.out.println("MusicBrainz pressed");
-			String c = panel.getPanel().getClass().getName();
-			if(c==null) return;
-			else if(c=="MusicBrainzPanel") ((MusicBrainzPanel)panel.getPanel()).startPanel();
-		}
-		else if (e.getSource()==mi_about) new InfoDlg();
-		else if (e.getSource()==mi_license) new LicenseDlg();
-		//else if (e.getSource()==mi_help) new HelpDlg();
-		else System.out.println(e.getSource());
-	}
-
-/*
-	/*@Override
-		public void keyPressed(KeyEvent e) {
-			if (e.getSource().equals(m_file)) {
-				if (e.getModifiersEx()!=0) return; // Ctrl,Alt etc
-				switch(e.getKeyCode()) {
-					case KeyEvent.VK_RIGHT: changeMenu(m_file,m_edit); break;
-					case KeyEvent.VK_LEFT:  changeMenu(m_file,m_help); break;
-					case KeyEvent.VK_DOWN:  changeMenuItem(m_file); break;
-					case KeyEvent.VK_UP:    changeMenuItem(m_file); break;
-				}
-			}
-			else if (e.getSource().equals(m_edit)) {
-				if (e.getModifiersEx()!=0) return; // Ctrl,Alt etc
-				switch(e.getKeyCode()) {
-					case KeyEvent.VK_RIGHT: changeMenu(m_edit,m_view); break;
-					case KeyEvent.VK_LEFT: changeMenu(m_edit,m_file); break;
-				}
-			}
-			else if (e.getSource().equals(m_view)) {
-				if (e.getModifiersEx()!=0) return; // Ctrl,Alt etc
-				switch(e.getKeyCode()) {
-					case KeyEvent.VK_RIGHT: changeMenu(m_view,m_help); break;
-					case KeyEvent.VK_LEFT: changeMenu(m_view,m_edit); break;
-				}
-			}
-			else if (e.getSource().equals(m_help)) {
-				if (e.getModifiersEx()!=0) return; // Ctrl,Alt etc
-				switch(e.getKeyCode()) {
-					case KeyEvent.VK_RIGHT: changeMenu(m_help,m_file); break;
-					case KeyEvent.VK_LEFT: changeMenu(m_help,m_view); break;
-				}
-			}
-		}
-	}
-	public LocalKeyAdapter keyListener = new LocalKeyAdapter();*/
 }

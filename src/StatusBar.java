@@ -10,6 +10,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.Timer;
+import javax.swing.UIManager;
 import javax.swing.border.BevelBorder;
 import javax.swing.plaf.ColorUIResource;
 
@@ -66,12 +67,11 @@ public class StatusBar extends JLabel implements ActionListener {
 	//3900-3999 Hardware Errors
 		
 	private static final long serialVersionUID = 1L;
-	//private MFWindow frame;
 	private Timer timer = new Timer(3000, this);
 	
 	/* Constructor */
 	public StatusBar(JFrame f){
-		//frame=(MFWindow)f;
+		setOpaque(true);
 		setForeground(new ColorUIResource(Color.RED));
 		setBorder(new BevelBorder(BevelBorder.LOWERED));
 		setStatus(99);

@@ -3,12 +3,10 @@
  * For wishes, questions mail to anakor@gmx.net.
  */
 
-import java.io.File;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
 
 public class LibraryTag {
 	static ResourceBundle bundle;
@@ -26,7 +24,6 @@ public class LibraryTag {
         while (argi < args.length) {
             String arg = args[argi];
             if (!arg.startsWith("-")) break;
-            //if (arg.length() < 2) usage();
             for (int i=1; i<arg.length(); i++) {
                 char c = arg.charAt(i);
                 switch (c) {
@@ -37,9 +34,23 @@ public class LibraryTag {
             }
             argi++;
         }
-        if(MFTools.getJavaShortVersion()>=8) new LibraryTagWindow();
+        if(getJavaShortVersion()>=8) new LibraryTagWindow();
         else JOptionPane.showMessageDialog(null,
         		LibraryTag.bundle.getString("JVM_1") + "\n" + LibraryTag.bundle.getString("JVM_2"),
         		LibraryTag.bundle.getString("JVM_Title"), JOptionPane.WARNING_MESSAGE); 
     }
+	
+	private static int getJavaShortVersion(){
+		String property   = System.getProperty("java.version");
+		String version = null;
+		
+		if(property.startsWith("1.")) version = property.substring(2, 3);
+		else {
+			int dot = property.indexOf(".");
+		    if(dot != -1) { version = property.substring(0, dot); }
+		    else version = property;
+		}
+		
+		return Integer.parseInt(version);
+	}
 }
