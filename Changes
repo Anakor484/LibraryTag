@@ -16,3 +16,4 @@ Version                                   Changes
                                           images für buttons. Going now ahead with get reading tags from library.
                                           Removed KeyListener in the main Window, added KeyBinding for F1 key.
                                           V. 0.04 is near completition, working on the last thread.
+          Pre-View Release 0.04
