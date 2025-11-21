@@ -17,3 +17,4 @@ Version                                   Changes
                                           Removed KeyListener in the main Window, added KeyBinding for F1 key.
                                           V. 0.04 is near completition, working on the last thread.
 0.05      Pre-View 0.05                   This version will (hopefully) see writing capabilities on media files. 
+                                          Corrected a bug in the Help system, which caused wrong display of •, →, –.
