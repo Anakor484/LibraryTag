@@ -1,7 +1,7 @@
 Version                                   Changes
 0.01      First public Pre-View
-0.02      Pre-View                        Corrected a bug in english Locale
-0.03      Pre-View                        Changed the names in the Properties file. Delete LibraryTag.prp if available.
+0.02      Pre-View 0.02                   Corrected a bug in english Locale
+0.03      Pre-View 0.03                   Changed the names in the Properties file. Delete LibraryTag.prp if available.
                                           Added 4 new properties. MB.Limit sets the limit of lookup requests, default is 100.
                                           LibraryTag.Update [ true/false ] is the major switch for acessing the library.
                                           LibraryTag.Basedir is the position of the library. For Windows for example it can
@@ -9,11 +9,11 @@ Version                                   Changes
                                           LibraryTag.RW [ro/rw] sets wether the library access should be readonly or readwrite.
                                           Added searching for files, but readonly access.
                                           Changed Readme to point out to LibraryTag.prp
-0.04      Will be released in a week      Added reading tags from the Library. This is still underway...
-          maybe. This is the last ro      Added support for FlatLightLaf and FlatDarkLaf. Both can be set in the properties.
-          version.                        Added Help with 4 help files for general help, properties file, howto, changes.
-          Removed support for FlatLaf     I removed support FlatLaf, because of native libraries. Added theme for Metal. Added new
+0.04      Pre-View 0.04                   Added reading tags from the Library. This is still underway...
+                                          Added support for FlatLightLaf and FlatDarkLaf. Both can be set in the properties.
+                                          Added Help with 4 help files for general help, properties file, howto, changes.
+                                          I removed support FlatLaf, because of native libraries. Added theme for Metal. Added new
                                           images für buttons. Going now ahead with get reading tags from library.
                                           Removed KeyListener in the main Window, added KeyBinding for F1 key.
                                           V. 0.04 is near completition, working on the last thread.
-          Pre-View Release 0.04
+0.05      Pre-View 0.05                   This version will (hopefully) see writing capabilities on media files. 
