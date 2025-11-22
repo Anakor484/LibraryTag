@@ -18,3 +18,7 @@ Version                                   Changes
                                           V. 0.04 is near completition, working on the last thread.
 0.05      Pre-View 0.05                   This version will (hopefully) see writing capabilities on media files. 
                                           Corrected a bug in the Help system, which caused wrong display of •, →, –.
+                                          Corrected bug which arise, when unusual chars like ?, … are in the Titles of ReleaseGroups
+                                          Added F-Key support for F1: Help, F5: Copy LastMBID, F8: Clear TextField
+                                          Added Property LibraryTag.LastMBID, which contain the last used MBID
+                                          Added help file main.html with an image of the program.
